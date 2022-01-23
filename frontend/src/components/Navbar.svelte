@@ -1,6 +1,22 @@
 <script>
   import logo from "../assets/logo.png";
-  import { Link, Router } from "svelte-navigator";
+  import { Link, navigate, Router } from "svelte-navigator";
+  import { isAuthenticated, token, userId } from "../utils/stores";
+  import { infoToast } from "../utils/toasts";
+  import axios from "axios";
+
+  function logout() {
+    axios.defaults.headers.common["Authorization"] = "";
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
+    token.set("");
+    userId.set(null);
+
+    infoToast("You are logged out");
+    navigate("/");
+  }
 </script>
 
 <div class="">
@@ -10,34 +26,55 @@
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0">
-              <!-- Copy And Paste by Hea Poh Lin from NounProject.com -->
               <Link to="/">
+                <!-- Copy And Paste by Hea Poh Lin from NounProject.com -->
                 <img class="h-8 w-8" src={logo} alt="Logo" />
               </Link>
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <div
-                  class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700"
-                >
-                  New paste
-                </div>
+                <Link to="/">
+                  <div
+                    class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700 cursor-pointer"
+                  >
+                    New paste
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
           <div class="block">
             <div class="ml-4 flex flex-row gap-4 items-center md:ml-6">
-              <div
-                class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700"
-              >
-                Account
-              </div>
-              <div
-                class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700"
-              >
-                Sign out
-              </div>
+              {#if $isAuthenticated}
+                <Link to="/account">
+                  <div
+                    class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Account
+                  </div>
+                </Link>
+                <div
+                  on:click={logout}
+                  class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700 cursor-pointer"
+                >
+                  Logout
+                </div>
+              {:else}
+                <Link to="/sign-in">
+                  <div
+                    class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Sign In
+                  </div>
+                </Link>
+                <Link to="/sign-up">
+                  <div
+                    class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium transition ease-in-out hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Sign Up
+                  </div>
+                </Link>
+              {/if}
             </div>
           </div>
         </div>
