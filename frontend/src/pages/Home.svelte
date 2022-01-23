@@ -1,6 +1,8 @@
 <script>
-  import Navbar from "../components/Navbar.svelte";
+  import { useFocus } from "svelte-navigator";
   import Editor from "../components/Editor.svelte";
+
+  const focus = useFocus();
 </script>
 
 <div class="w-full md:w-3/4 mx-auto">
@@ -14,10 +16,11 @@
       class="flex flex-col md:flex-row gap-4 justify-center md:items-center"
     >
       <input
+        use:focus
         class="border-2 text-white bg-indigo-800 bg-opacity-20 border-indigo-500
         rounded-md md:mr-6 py-2 px-3 md:w-96
         shadow-sm focus:outline-none focus:border-indigo-500
-        focus:ring-indigo-800 focus:ring-2 "
+        focus:ring-indigo-800 focus:ring-2"
         type="text"
         name="title"
         id="title"
